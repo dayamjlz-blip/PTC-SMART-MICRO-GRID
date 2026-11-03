@@ -105,8 +105,8 @@ class _RiwayatPageState extends State<RiwayatPage> {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFF8FAFC), // Putih sangat muda di atas
-              Color(0xFFBDD4EF), // Biru gradien yang jelas di bawah
+              Color(0xFFD9E1F1), // Putih sangat muda di atas
+              Color(0xFF31487A), // Biru gradien yang jelas di bawah
             ],
           ),
         ),

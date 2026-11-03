@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_mikro_grid/pages/akun_page.dart';
 import 'package:smart_mikro_grid/pages/riwayat_page.dart';
+import 'package:smart_mikro_grid/pages/model_ai_page.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -15,7 +16,7 @@ class _MainNavigationState extends State<MainNavigation> {
   final List<Widget> pages = [
     const Center(child: Text('Halaman Beranda')),
     const Center(child: Text('Halaman Analisis')),
-    const Center(child: Text('Halaman Energi')),
+    const ModelAIPage(),
     const RiwayatPage(),
     const AkunPage(),
   ];

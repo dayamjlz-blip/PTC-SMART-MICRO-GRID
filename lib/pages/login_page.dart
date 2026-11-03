@@ -31,8 +31,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final inputUsername = usernameController.text.trim();
 
-    final success =
-        inputUsername == widget.account.name &&
+    final success = inputUsername == widget.account.name &&
         passwordController.text == widget.account.password;
 
     setState(() {
@@ -244,8 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                                 child: ElevatedButton(
                                   onPressed: submitLogin,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color(0xFF192338),
+                                    backgroundColor: const Color(0xFF192338),
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
