@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_mikro_grid/pages/akun_page.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -10,12 +11,12 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int selectedIndex = 0;
 
-  final List<Widget> pages = const [
+  final List<Widget> pages = [
     Center(child: Text('Halaman Beranda')),
     Center(child: Text('Halaman Analisis')),
     Center(child: Text('Halaman Energi')),
     Center(child: Text('Halaman Riwayat')),
-    Center(child: Text('Halaman Akun')),
+    const AkunPage(),
   ];
 
   @override
