@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_mikro_grid/pages/akun_page.dart';
+import 'package:smart_mikro_grid/pages/riwayat_page.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -15,7 +16,7 @@ class _MainNavigationState extends State<MainNavigation> {
     const Center(child: Text('Halaman Beranda')),
     const Center(child: Text('Halaman Analisis')),
     const Center(child: Text('Halaman Energi')),
-    const Center(child: Text('Halaman Riwayat')),
+    const RiwayatPage(),
     const AkunPage(),
   ];
 
@@ -23,12 +24,10 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-
       body: IndexedStack(
         index: selectedIndex,
         children: pages,
       ),
-
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(
@@ -48,32 +47,25 @@ class _MainNavigationState extends State<MainNavigation> {
               ),
             ],
           ),
-
           child: ClipRRect(
             borderRadius: BorderRadius.circular(22),
             child: BottomNavigationBar(
               currentIndex: selectedIndex,
-
               onTap: (index) {
                 setState(() {
                   selectedIndex = index;
                 });
               },
-
               type: BottomNavigationBarType.fixed,
               backgroundColor: const Color(0xFFF7F9FD),
               elevation: 0,
-
               selectedItemColor: const Color(0xFF31487A),
               unselectedItemColor: const Color(0xFF9AA6BA),
-
               selectedFontSize: 12,
               unselectedFontSize: 12,
-
               selectedLabelStyle: const TextStyle(
                 fontWeight: FontWeight.w600,
               ),
-
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(Icons.home_outlined),
