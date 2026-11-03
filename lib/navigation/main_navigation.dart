@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:smart_mikro_grid/pages/akun_page.dart';
 import 'package:smart_mikro_grid/pages/riwayat_page.dart';
 import 'package:smart_mikro_grid/pages/model_ai_page.dart';
+import 'package:smart_mikro_grid/pages/figma_dashboard_pages.dart';
+import 'package:smart_mikro_grid/pages/figma_analisis_page.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -14,8 +16,8 @@ class _MainNavigationState extends State<MainNavigation> {
   int selectedIndex = 0;
 
   final List<Widget> pages = [
-    const Center(child: Text('Halaman Beranda')),
-    const Center(child: Text('Halaman Analisis')),
+        const FigmaDashboardPage(),
+        const FigmaAnalisisPage(),
     const ModelAIPage(),
     const RiwayatPage(),
     const AkunPage(),
