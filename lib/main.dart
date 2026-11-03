@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_mikro_grid/pages/figma_welcome_page.dart';
+import 'package:smart_mikro_grid/pages/akun_page.dart';
 
 void main() {
   runApp(const SmartMicroGridApp());
@@ -16,7 +17,7 @@ class SmartMicroGridApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const FigmaWelcomePage(),
+      home: const AkunPage(),
     );
   }
 }
