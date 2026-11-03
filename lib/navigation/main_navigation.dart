@@ -12,59 +12,98 @@ class _MainNavigationState extends State<MainNavigation> {
   int selectedIndex = 0;
 
   final List<Widget> pages = [
-    Center(child: Text('Halaman Beranda')),
-    Center(child: Text('Halaman Analisis')),
-    Center(child: Text('Halaman Energi')),
-    Center(child: Text('Halaman Riwayat')),
+    const Center(child: Text('Halaman Beranda')),
+    const Center(child: Text('Halaman Analisis')),
+    const Center(child: Text('Halaman Energi')),
+    const Center(child: Text('Halaman Riwayat')),
     const AkunPage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[selectedIndex],
+      extendBody: true,
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectedIndex,
+      body: IndexedStack(
+        index: selectedIndex,
+        children: pages,
+      ),
 
-        onTap: (index) {
-          setState(() {
-            selectedIndex = index;
-          });
-        },
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(18, 0, 18, 10),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF7F9FD),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+              color: const Color(0xFFDCE3F0),
+              width: 0.8,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
 
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: const Color(0xFF31487A),
-        unselectedItemColor: Colors.grey,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(22),
+            child: BottomNavigationBar(
+              currentIndex: selectedIndex,
 
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Beranda',
+              onTap: (index) {
+                setState(() {
+                  selectedIndex = index;
+                });
+              },
+
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: const Color(0xFFF7F9FD),
+              elevation: 0,
+
+              selectedItemColor: const Color(0xFF31487A),
+              unselectedItemColor: const Color(0xFF9AA6BA),
+
+              selectedFontSize: 12,
+              unselectedFontSize: 12,
+
+              selectedLabelStyle: const TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined),
+                  activeIcon: Icon(Icons.home),
+                  label: 'Beranda',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.analytics_outlined),
+                  activeIcon: Icon(Icons.analytics),
+                  label: 'Analisis',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.bolt_outlined),
+                  activeIcon: Icon(Icons.bolt),
+                  label: 'Energi',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.history),
+                  activeIcon: Icon(Icons.history),
+                  label: 'Riwayat',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person_outline),
+                  activeIcon: Icon(Icons.person),
+                  label: 'Akun',
+                ),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics_outlined),
-            activeIcon: Icon(Icons.analytics),
-            label: 'Analisis',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bolt),
-            activeIcon: Icon(Icons.bolt),
-            label: 'Energi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            activeIcon: Icon(Icons.history),
-            label: 'Riwayat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Akun',
-          ),
-        ],
+        ),
       ),
     );
   }
