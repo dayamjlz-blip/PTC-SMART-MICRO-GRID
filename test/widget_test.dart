@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:profil_mahasiswa/main.dart';
+import 'package:smart_mikro_grid/main.dart';
 
 void main() {
   testWidgets('Aplikasi Smart Micro-Grid dapat dibuka',

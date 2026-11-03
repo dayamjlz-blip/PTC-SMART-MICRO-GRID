@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:profil_mahasiswa/models/user.dart';
-import 'package:profil_mahasiswa/pages/login_page.dart';
-import 'package:profil_mahasiswa/pages/register_page.dart';
+import 'package:smart_mikro_grid/models/user.dart';
+import 'package:smart_mikro_grid/pages/login_page.dart';
+import 'package:smart_mikro_grid/pages/register_page.dart';
 
 class FigmaWelcomePage extends StatefulWidget {
   const FigmaWelcomePage({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:profil_mahasiswa/pages/figma_welcome_page.dart';
+import 'package:smart_mikro_grid/pages/figma_welcome_page.dart';
 
 void main() {
   runApp(const SmartMicroGridApp());

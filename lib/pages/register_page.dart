@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:profil_mahasiswa/models/user.dart';
-import 'package:profil_mahasiswa/utils/validators.dart';
+import 'package:smart_mikro_grid/models/user.dart';
+import 'package:smart_mikro_grid/utils/validators.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
