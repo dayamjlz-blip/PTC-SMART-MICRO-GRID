@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../utils/validators.dart';
+import '../navigation/main_navigation.dart';
 
 class LoginPage extends StatefulWidget {
   final User account;
@@ -34,19 +35,31 @@ class _LoginPageState extends State<LoginPage> {
     final success = inputUsername == widget.account.name &&
         passwordController.text == widget.account.password;
 
-    setState(() {
-      loginSuccess = success;
-
-      if (success) {
+    if (success) {
+      setState(() {
+        loginSuccess = true;
         failedAttempts = 0;
-        message = 'Login berhasil. Selamat datang, ${widget.account.name}!';
-      } else {
+        message =
+            'Login berhasil. Selamat datang, ${widget.account.name}!';
+      });
+
+      // Masuk ke Dashboard setelah Login berhasil
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MainNavigation(),
+        ),
+      );
+    } else {
+      setState(() {
+        loginSuccess = false;
         failedAttempts++;
+
         message = failedAttempts >= 3
             ? 'Login gagal 3 kali. Periksa kembali Username dan Password.'
             : 'Username atau Password salah.';
-      }
-    });
+      });
+    }
   }
 
   // Reset Form
@@ -228,7 +241,8 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      obscurePassword = !obscurePassword;
+                                      obscurePassword =
+                                          !obscurePassword;
                                     });
                                   },
                                 ),
@@ -243,10 +257,12 @@ class _LoginPageState extends State<LoginPage> {
                                 child: ElevatedButton(
                                   onPressed: submitLogin,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF192338),
+                                    backgroundColor:
+                                        const Color(0xFF192338),
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius:
+                                          BorderRadius.circular(10),
                                     ),
                                   ),
                                   child: const Text('Masuk'),
@@ -256,7 +272,8 @@ class _LoginPageState extends State<LoginPage> {
                               // Pesan Login
                               if (message.isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 15),
+                                  padding:
+                                      const EdgeInsets.only(top: 15),
                                   child: Text(
                                     message,
                                     textAlign: TextAlign.center,
@@ -269,9 +286,11 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
 
+                              // Percobaan Login
                               if (failedAttempts > 0)
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 8),
+                                  padding:
+                                      const EdgeInsets.only(top: 8),
                                   child: Text(
                                     'Percobaan gagal: $failedAttempts',
                                     style: const TextStyle(
@@ -286,11 +305,14 @@ class _LoginPageState extends State<LoginPage> {
                               const Row(
                                 children: [
                                   Expanded(
-                                    child: Divider(color: Colors.white),
+                                    child: Divider(
+                                      color: Colors.white,
+                                    ),
                                   ),
                                   Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 12),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                    ),
                                     child: Text(
                                       'Or sign up with',
                                       style: TextStyle(
@@ -300,7 +322,9 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
                                   Expanded(
-                                    child: Divider(color: Colors.white),
+                                    child: Divider(
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -313,7 +337,8 @@ class _LoginPageState extends State<LoginPage> {
                                 height: 42,
                                 child: OutlinedButton.icon(
                                   onPressed: () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
                                       const SnackBar(
                                         content: Text(
                                           'Login Google belum diaktifkan.',
@@ -338,7 +363,8 @@ class _LoginPageState extends State<LoginPage> {
                                     backgroundColor: Colors.white,
                                     side: BorderSide.none,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius:
+                                          BorderRadius.circular(10),
                                     ),
                                   ),
                                 ),

@@ -18,7 +18,7 @@ class SmartMicroGridApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const MainNavigation(),
+      home: const FigmaWelcomePage(),
     );
   }
 }
