@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_mikro_grid/models/user.dart';
 import 'package:smart_mikro_grid/utils/validators.dart';
+import 'package:smart_mikro_grid/pages/register_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -272,8 +273,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: ElevatedButton(
                                   onPressed: submitRegistration,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color(0xFF192338),
+                                    backgroundColor: const Color(0xFF192338),
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
@@ -338,8 +338,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     ),
                                   ),
                                   style: OutlinedButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 255, 255, 255),
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 255, 255, 255),
                                     side: BorderSide.none,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(10),
