@@ -1,6 +1,6 @@
-enum UserRole { admin, user }
+enum UserRole { admin, Pengguna }
 
 class UserSession {
   static UserRole currentRole =
-      UserRole.admin; // Ubah ke UserRole.user untuk tes tampilan pengguna
+      UserRole.Pengguna; // Ubah ke UserRole.Pengguna untuk tes tampilan pengguna
 }
