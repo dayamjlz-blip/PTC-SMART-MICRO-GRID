@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:smart_mikro_grid/models/user.dart';
-import 'package:smart_mikro_grid/pages/login_page.dart';
-import 'package:smart_mikro_grid/pages/register_page.dart';
+import '../../models/user.dart';
+import 'login_page.dart';
+import 'register_page.dart';
 
 class FigmaWelcomePage extends StatefulWidget {
   final User? account;
@@ -52,7 +52,7 @@ class _FigmaWelcomePageState extends State<FigmaWelcomePage> {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      "Pantau dan kelola energi surya dengan\nmudah dan efisiensi",
+                      "Pantau dan kelola energi surya dengan\nmudah dan efisien",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 13,
@@ -136,9 +136,9 @@ class _FigmaWelcomePageState extends State<FigmaWelcomePage> {
 
                 const SizedBox(height: 24),
 
-                // FOOTER TEKS FIGMA
+                // FOOTER TEKS
                 const Text(
-                  "Sistem Smart Mikro-Grid ITH 2025",
+                  "Sistem Smart Micro-Grid ITH 2026",
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.white70,

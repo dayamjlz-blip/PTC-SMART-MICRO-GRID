@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_mikro_grid/models/user.dart';
 import 'package:smart_mikro_grid/navigation/main_navigation.dart';
-import 'package:smart_mikro_grid/pages/register_page.dart';
+import 'register_page.dart';
 
 class LoginPage extends StatefulWidget {
   final User? account;
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 8),
 
-                // LOGO SMART MICRO-GRID FIGMA
+                // LOGO SMART MICRO-GRID
                 Image.asset(
                   'assets/images/logo.png',
                   height: 90,
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 const SizedBox(height: 16),
 
-                // CARD FORM LOGIN FIGMA
+                // CARD FORM LOGIN
                 Container(
                   padding: const EdgeInsets.all(24.0),
                   decoration: BoxDecoration(
@@ -145,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 4),
                         const Text(
-                          "Masukkan akun Anda untuk melanjutkan",
+                          "Masuk ke akun Anda untuk melanjutkan",
                           style: TextStyle(
                             fontSize: 12,
                             color: Color(0xFF64748B),
@@ -288,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 24),
 
-                        // TOMBOL MASUK FIGMA (NAVY / DARK BLUE)
+                        // TOMBOL MASUK
                         SizedBox(
                           width: double.infinity,
                           height: 48,
@@ -313,12 +313,12 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         const SizedBox(height: 20),
 
-                        // LINK SIGN UP HERE
+                        // TAUTAN DAFTAR AKUN BARU
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text(
-                              "Don't have an account? ",
+                              "Belum punya akun? ",
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Color(0xFF64748B),
@@ -334,7 +334,7 @@ class _LoginPageState extends State<LoginPage> {
                                 );
                               },
                               child: const Text(
-                                "Sign up here",
+                                "Daftar di sini",
                                 style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -351,7 +351,7 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 24),
                 const Text(
-                  "Sistem Smart Mikro-Grid ITH 2025",
+                  "Sistem Smart Micro-Grid ITH 2026",
                   style: TextStyle(
                     fontSize: 11,
                     color: Colors.white70,

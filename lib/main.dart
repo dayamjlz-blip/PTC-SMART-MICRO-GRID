@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:smart_mikro_grid/pages/figma_welcome_page.dart';
-import 'package:smart_mikro_grid/pages/akun_page.dart';
-import 'package:smart_mikro_grid/navigation/main_navigation.dart';
+import 'package:smart_mikro_grid/pages/autentikasi/figma_welcome_page.dart';
 
 void main() {
-  runApp(const SmartMicroGridApp());
+  runApp(const MyApp());
 }
 
-class SmartMicroGridApp extends StatelessWidget {
-  const SmartMicroGridApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
       title: 'Smart Micro-Grid',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
+        colorSchemeSeed: const Color(0xFF1E3A8A),
       ),
       home: const FigmaWelcomePage(),
     );

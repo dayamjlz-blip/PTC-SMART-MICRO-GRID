@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_mikro_grid/models/user.dart';
+import 'package:smart_mikro_grid/navigation/main_navigation.dart';
 import 'package:smart_mikro_grid/utils/validators.dart';
-import 'package:smart_mikro_grid/pages/register_page.dart';
+import 'login_page.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -30,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  // Proses pendaftaran
+  // Proses pendaftaran -> Otomatis role Pengguna & langsung masuk ke Dashboard
   void submitRegistration() {
     if (!formKey.currentState!.validate()) return;
 
@@ -41,7 +42,21 @@ class _RegisterPageState extends State<RegisterPage> {
       role: 'Pengguna',
     );
 
-    Navigator.pop(context, user);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Pendaftaran berhasil! Selamat datang, ${user.name}.'),
+        backgroundColor: Colors.green,
+      ),
+    );
+
+    // Hapus tumpukan layar autentikasi & langsung arahkan ke MainNavigation
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MainNavigation(account: user),
+      ),
+      (route) => false,
+    );
   }
 
   // Reset formulir
@@ -82,7 +97,7 @@ class _RegisterPageState extends State<RegisterPage> {
             fontSize: 13,
           ),
           filled: true,
-          fillColor: const Color.fromARGB(255, 255, 255, 255),
+          fillColor: Colors.white,
           prefixIcon: Container(
             margin: const EdgeInsets.all(4),
             decoration: const BoxDecoration(
@@ -154,17 +169,23 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       // Logo
                       SizedBox(
-                        width: 230 * scale,
-                        height: 230 * scale,
+                        width: 190 * scale,
+                        height: 190 * scale,
                         child: Image.asset(
                           'assets/images/logo.png',
                           fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                            Icons.bolt_rounded,
+                            size: 90,
+                            color: Color(0xFF0066FF),
+                          ),
                         ),
                       ),
 
                       // Judul
                       const Text(
-                        'Welcome back!',
+                        'Buat Akun Pengguna',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 24,
@@ -172,20 +193,22 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
 
+                      const SizedBox(height: 4),
+
                       const Text(
-                        'Create your account',
+                        'Daftar untuk langsung memantau sistem',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
+                          color: Colors.white70,
+                          fontSize: 13,
                         ),
                       ),
 
-                      SizedBox(height: 35 * scale),
+                      SizedBox(height: 28 * scale),
 
                       // Formulir
                       Padding(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 57 * scale,
+                          horizontal: 40 * scale,
                         ),
                         child: Form(
                           key: formKey,
@@ -199,7 +222,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 validator: validateNameInput,
                               ),
 
-                              SizedBox(height: 23 * scale),
+                              SizedBox(height: 18 * scale),
 
                               // Email
                               buildInput(
@@ -210,7 +233,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 validator: validateEmailInput,
                               ),
 
-                              SizedBox(height: 23 * scale),
+                              SizedBox(height: 18 * scale),
 
                               // Password
                               buildInput(
@@ -234,7 +257,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
 
-                              SizedBox(height: 23 * scale),
+                              SizedBox(height: 18 * scale),
 
                               // Konfirmasi Password
                               buildInput(
@@ -264,113 +287,94 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
 
-                              SizedBox(height: 35 * scale),
+                              SizedBox(height: 28 * scale),
 
                               // Tombol Daftar
                               SizedBox(
-                                width: 219 * scale,
-                                height: 45,
+                                width: double.infinity,
+                                height: 48,
                                 child: ElevatedButton(
                                   onPressed: submitRegistration,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF192338),
                                     foregroundColor: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                      borderRadius: BorderRadius.circular(24),
                                     ),
                                   ),
-                                  child: const Text('Daftar'),
+                                  child: const Text(
+                                    'Daftar & Masuk',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                                 ),
                               ),
 
-                              SizedBox(height: 20 * scale),
+                              SizedBox(height: 16 * scale),
 
-                              // Pembatas Google
-                              const Row(
+                              // Tautan ke Login (khusus yang sudah punya akun / Admin)
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Expanded(
-                                    child: Divider(color: Colors.white),
+                                  const Text(
+                                    'Sudah punya akun? ',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
                                   ),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 12),
-                                    child: Text(
-                                      'Or sign up with',
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginPage(),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text(
+                                      'Masuk di sini',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: Colors.white,
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: Divider(color: Colors.white),
                                   ),
                                 ],
                               ),
 
-                              SizedBox(height: 20 * scale),
-
-                              // Tombol Google
-                              SizedBox(
-                                width: 259 * scale,
-                                height: 42,
-                                child: OutlinedButton.icon(
-                                  onPressed: () {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          'Pendaftaran Google belum diaktifkan.',
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  icon: const Icon(
-                                    Icons.g_mobiledata,
-                                    size: 25,
-                                    color: Colors.blue,
-                                  ),
-                                  label: const Text(
-                                    'Daftar dengan Google',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  style: OutlinedButton.styleFrom(
-                                    backgroundColor: const Color.fromARGB(
-                                        255, 255, 255, 255),
-                                    side: BorderSide.none,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              SizedBox(height: 35 * scale),
+                              SizedBox(height: 8 * scale),
 
                               // Reset Form
                               TextButton(
                                 onPressed: resetRegistration,
                                 child: const Text(
                                   'Reset Form',
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
 
-                              SizedBox(height: 15 * scale),
+                              SizedBox(height: 16 * scale),
 
                               // Footer
                               const Text(
-                                'Sistem Smart Mikro-Grid ITH 2026',
+                                'Sistem Smart Micro-Grid ITH 2026',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.white70,
                                   fontSize: 11,
                                 ),
                               ),
 
-                              SizedBox(height: 15 * scale),
+                              SizedBox(height: 16 * scale),
                             ],
                           ),
                         ),

@@ -1,14 +1,18 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:smart_mikro_grid/models/user.dart';
+import 'package:smart_mikro_grid/pages/autentikasi/figma_welcome_page.dart';
 
-class AkunPage extends StatefulWidget {
-  const AkunPage({super.key});
+class AdminAkunPage extends StatefulWidget {
+  final User? account;
+
+  const AdminAkunPage({super.key, this.account});
 
   @override
-  State<AkunPage> createState() => _AkunPageState();
+  State<AdminAkunPage> createState() => _AdminAkunPageState();
 }
 
-class _AkunPageState extends State<AkunPage> {
+class _AdminAkunPageState extends State<AdminAkunPage> {
   final Color primary = const Color(0xFF31487A);
   final Color lightBlue = const Color(0xFFD9E1F1);
 
@@ -21,6 +25,9 @@ class _AkunPageState extends State<AkunPage> {
   bool notifWifi = true;
 
   final List<bool> checklist = [false, false, false, false];
+
+  String get displayName => widget.account?.name ?? 'Admin Smart Micro-Grid';
+  String get displayEmail => widget.account?.email ?? 'admin@ith.ac.id';
 
   // PANEL BAWAH DENGAN EFEK BLUR
   void openPanel({
@@ -51,7 +58,6 @@ class _AkunPageState extends State<AkunPage> {
                   ),
                 ),
               ),
-
               Align(
                 alignment: Alignment.bottomCenter,
                 child: SlideTransition(
@@ -171,11 +177,11 @@ class _AkunPageState extends State<AkunPage> {
             children: [
               panelHeader('Informasi Akun', context),
               const SizedBox(height: 18),
-              infoRow('Nama', 'Zahra Aulia'),
+              infoRow('Nama', displayName),
               const Divider(),
-              infoRow('Role', 'Pengelola'),
+              infoRow('Role', 'Admin (Pengelola)'),
               const Divider(),
-              infoRow('Email', 'zahraaulia@ith.ac.id'),
+              infoRow('Email', displayEmail),
               const SizedBox(height: 25),
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -230,9 +236,9 @@ class _AkunPageState extends State<AkunPage> {
 
         final descriptions = [
           'Wi-Fi dan alamat server, lalu uji koneksi',
-          'INA219 ×2, BH1750, DS18B20/DHT22 terbaca',
-          'AUTO/MANUAL dan batas SoC',
-          'Relay 1 Lampu LED, Relay 2 Kipas DC',
+          'INA219 ×2, LDR, DHT22 terbaca',
+          'AUTO/MANUAL dan batas SoC (0–100%)',
+          'Relay 1 Kipas DC (Sekunder), Relay 2 Lampu LED (Prioritas)',
         ];
 
         final icons = [
@@ -248,9 +254,7 @@ class _AkunPageState extends State<AkunPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               panelHeader('Pengaturan Sistem', context),
-
               const SizedBox(height: 18),
-
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -261,9 +265,7 @@ class _AkunPageState extends State<AkunPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 15),
-
               ...List.generate(4, (index) {
                 return Column(
                   children: [
@@ -275,7 +277,7 @@ class _AkunPageState extends State<AkunPage> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 17,
+                          vertical: 14,
                         ),
                         child: Row(
                           children: [
@@ -288,13 +290,10 @@ class _AkunPageState extends State<AkunPage> {
                                 });
                               },
                             ),
-
-                            const SizedBox(width: 12),
-
+                            const SizedBox(width: 10),
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     titles[index],
@@ -304,7 +303,7 @@ class _AkunPageState extends State<AkunPage> {
                                       fontSize: 15,
                                     ),
                                   ),
-                                  const SizedBox(height: 7),
+                                  const SizedBox(height: 5),
                                   Text(
                                     descriptions[index],
                                     style: const TextStyle(
@@ -315,17 +314,16 @@ class _AkunPageState extends State<AkunPage> {
                                 ],
                               ),
                             ),
-
+                            const SizedBox(width: 8),
                             Icon(
                               icons[index],
                               color: primary,
-                              size: 27,
+                              size: 26,
                             ),
                           ],
                         ),
                       ),
                     ),
-
                     const Divider(
                       thickness: 1,
                       color: Color(0xFFCCCCCC),
@@ -333,21 +331,17 @@ class _AkunPageState extends State<AkunPage> {
                   ],
                 );
               }),
-
               const SizedBox(height: 12),
-
               const Text(
                 'ESP32 mengirim data tiap 5 detik. '
-                'Sistem menggunakan prediksi daya '
-                'untuk membantu pengelolaan beban.',
+                'Sistem menggunakan prediksi daya 30 menit ke depan '
+                'untuk membantu pengelolaan beban baterai.',
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 13,
                 ),
               ),
-
               const SizedBox(height: 20),
-
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
@@ -372,7 +366,7 @@ class _AkunPageState extends State<AkunPage> {
       builder: (context, setPanelState) {
         final notificationTitles = [
           'SoC mendekati batas kritis',
-          'Load shedding aktif',
+          'Load shedding aktif (Relay 1 Kipas OFF)',
           'ESP32 offline',
           'Reconnect Wi-Fi gagal',
         ];
@@ -397,9 +391,7 @@ class _AkunPageState extends State<AkunPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               panelHeader('Notifikasi', context),
-
               const SizedBox(height: 15),
-
               ...List.generate(4, (index) {
                 return Column(
                   children: [
@@ -418,7 +410,6 @@ class _AkunPageState extends State<AkunPage> {
                               ),
                             ),
                           ),
-
                           Switch(
                             value: notificationValues[index],
                             activeTrackColor: primary,
@@ -431,7 +422,6 @@ class _AkunPageState extends State<AkunPage> {
                         ],
                       ),
                     ),
-
                     const Divider(
                       thickness: 1,
                       color: Color(0xFFCCCCCC),
@@ -439,9 +429,7 @@ class _AkunPageState extends State<AkunPage> {
                   ],
                 );
               }),
-
               const SizedBox(height: 20),
-
               TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: Text(
@@ -470,24 +458,19 @@ class _AkunPageState extends State<AkunPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               panelHeader('Bantuan', context),
-
               helpRow(
                 'ESP32 offline?',
-                'Cek Wi-Fi lalu nyalakan ulang perangkat.',
+                'Cek koneksi Wi-Fi lalu nyalakan ulang perangkat.',
               ),
-
               helpRow(
-                'Kipas tidak menyala?',
-                'Mode AUTO diatur EMS.',
+                'Relay 1 (Kipas DC) tidak menyala?',
+                'Pada mode AUTO, EMS memutus kipas saat SoC mendekati kritis.',
               ),
-
               helpRow(
-                'Ppred turun?',
-                'Pasokan surya menurun.',
+                'Prediksi daya (Ppred) turun?',
+                'Potensi daya surya 30 menit ke depan diprediksi menurun.',
               ),
-
               const SizedBox(height: 22),
-
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -505,8 +488,8 @@ class _AkunPageState extends State<AkunPage> {
                     Navigator.pop(context);
                     showInfoDialog(
                       'Hubungi Pengelola',
-                      'Silakan hubungi pengelola sistem '
-                      'untuk mendapatkan bantuan lebih lanjut.',
+                      'Silakan hubungi tim pengembang Smart Micro-Grid ITH '
+                          'untuk mendapatkan bantuan teknis lebih lanjut.',
                     );
                   },
                   child: const Text(
@@ -583,32 +566,28 @@ class _AkunPageState extends State<AkunPage> {
     );
   }
 
-  // KELUAR
+  // KELUAR -> Kembali ke layar Welcome
   void confirmLogout() {
     openPanel(
-      builder: (context, setPanelState) {
+      builder: (panelContext, setPanelState) {
         return panelContainer(
-          context,
+          panelContext,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              panelHeader('Keluar', context),
-
+              panelHeader('Keluar', panelContext),
               const SizedBox(height: 12),
-
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Anda perlu login lagi untuk memantau sistem.',
+                  'Anda perlu login lagi untuk memantau dan mengelola sistem.',
                   style: TextStyle(
                     color: primary,
                     fontSize: 15,
                   ),
                 ),
               ),
-
               const SizedBox(height: 25),
-
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -618,7 +597,14 @@ class _AkunPageState extends State<AkunPage> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            FigmaWelcomePage(account: widget.account),
+                      ),
+                      (route) => false,
+                    );
                   },
                   child: const Text(
                     'Ya, Keluar',
@@ -626,11 +612,9 @@ class _AkunPageState extends State<AkunPage> {
                   ),
                 ),
               ),
-
               const SizedBox(height: 8),
-
               TextButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop(panelContext),
                 child: Text(
                   'Batal',
                   style: TextStyle(
@@ -723,14 +707,14 @@ class _AkunPageState extends State<AkunPage> {
                     ),
                   ),
                   title: Text(
-                    'Zahra Aulia',
+                    displayName,
                     style: TextStyle(
                       color: primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   subtitle: Text(
-                    'Pengelola\nzahraaulia@ith.ac.id',
+                    'Admin (Pengelola)\n$displayEmail',
                     style: TextStyle(color: primary),
                   ),
                   trailing: IconButton(
@@ -755,7 +739,7 @@ class _AkunPageState extends State<AkunPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'SISTEM SMART MIKRO-GRID',
+                        'SISTEM SMART MICRO-GRID',
                         style: TextStyle(
                           color: primary,
                           fontWeight: FontWeight.bold,
@@ -764,21 +748,21 @@ class _AkunPageState extends State<AkunPage> {
 
                       const SizedBox(height: 10),
 
-                      Row(
+                      const Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.circle,
                             color: Colors.green,
                             size: 12,
                           ),
-                          const SizedBox(width: 8),
-                          const Expanded(
+                          SizedBox(width: 8),
+                          Expanded(
                             child: Text(
                               'ESP32 Online - 192.168.1.42',
                               style: TextStyle(fontSize: 11),
                             ),
                           ),
-                          const Text(
+                          Text(
                             'ONLINE',
                             style: TextStyle(
                               color: Colors.green,
@@ -806,31 +790,31 @@ class _AkunPageState extends State<AkunPage> {
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: isAuto
-                                    ? primary
-                                    : lightBlue,
-                                foregroundColor: isAuto
-                                    ? Colors.white
-                                    : primary,
+                                backgroundColor: isAuto ? primary : lightBlue,
+                                foregroundColor:
+                                    isAuto ? Colors.white : primary,
                               ),
                               onPressed: () {
                                 setState(() => isAuto = true);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Mode AUTO aktif — EMS mengikuti batas kritis ${batteryLimit.round()}%.',
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
                               },
                               child: const Text('AUTO'),
                             ),
                           ),
-
                           const SizedBox(width: 10),
-
                           Expanded(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: !isAuto
-                                    ? primary
-                                    : lightBlue,
-                                foregroundColor: !isAuto
-                                    ? Colors.white
-                                    : primary,
+                                backgroundColor: !isAuto ? primary : lightBlue,
+                                foregroundColor:
+                                    !isAuto ? Colors.white : primary,
                               ),
                               onPressed: () {
                                 setState(() => isAuto = false);
@@ -844,15 +828,26 @@ class _AkunPageState extends State<AkunPage> {
                       const SizedBox(height: 15),
 
                       Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Batas krisis baterai',
-                            style: TextStyle(
-                              color: primary,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Batas krisis baterai',
+                                style: TextStyle(
+                                  color: primary,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              Icon(
+                                isAuto
+                                    ? Icons.lock_outline_rounded
+                                    : Icons.lock_open_rounded,
+                                size: 15,
+                                color: isAuto ? Colors.grey : Colors.green,
+                              ),
+                            ],
                           ),
                           Text(
                             '${batteryLimit.round()}%',
@@ -864,16 +859,33 @@ class _AkunPageState extends State<AkunPage> {
                         ],
                       ),
 
+                      // Terkunci saat AUTO, dapat digeser saat MANUAL (FR10)
                       Slider(
                         value: batteryLimit,
-                        min: 10,
-                        max: 80,
+                        min: 0,
+                        max: 100,
+                        divisions: 100,
                         activeColor: primary,
-                        onChanged: (value) {
-                          setState(() {
-                            batteryLimit = value;
-                          });
-                        },
+                        onChanged: isAuto
+                            ? null
+                            : (value) {
+                                setState(() {
+                                  batteryLimit = value;
+                                });
+                              },
+                      ),
+
+                      Text(
+                        isAuto
+                            ? 'Terkunci saat mode AUTO. Pindah ke MANUAL untuk mengubah batas.'
+                            : 'Geser batas kritis, lalu tekan AUTO agar sistem mengikuti nilai baru.',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: isAuto
+                              ? Colors.grey.shade600
+                              : Colors.green.shade700,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
                     ],
                   ),

@@ -1,73 +1,128 @@
 import 'package:flutter/material.dart';
-import '../models/user_role.dart';
-import '../pages/beranda_page.dart';
-import '../pages/figma_analisis_page.dart';
-import '../pages/riwayat_page.dart';
-import '../pages/model_ai_page.dart';
-import '../pages/akun_page.dart';
+import 'package:smart_mikro_grid/models/user.dart';
+import 'package:smart_mikro_grid/pages/admin/admin_akun_page.dart';
+import 'package:smart_mikro_grid/pages/admin/admin_analisis_page.dart';
+import 'package:smart_mikro_grid/pages/admin/admin_beranda_page.dart';
+import 'package:smart_mikro_grid/pages/admin/admin_model_ai_page.dart';
+import 'package:smart_mikro_grid/pages/admin/admin_riwayat_page.dart';
+import 'package:smart_mikro_grid/pages/autentikasi/figma_welcome_page.dart';
 
 class MainNavigation extends StatefulWidget {
-  const MainNavigation({super.key});
+  final User? account;
+
+  const MainNavigation({super.key, this.account});
 
   @override
   State<MainNavigation> createState() => _MainNavigationState();
 }
 
 class _MainNavigationState extends State<MainNavigation> {
-  int _currentIndex = 0;
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
-    bool isAdmin = UserSession.currentRole == UserRole.admin;
+    final String role = (widget.account?.role ?? 'Admin').trim().toLowerCase();
+    final bool isPengguna = role == 'pengguna';
 
-    // Daftar Halaman Admin (5 Tab)
+    // 1. JALUR PENGGUNA (Sementara menunggu rekan tim mengisi folder pages/pengguna/)
+    if (isPengguna) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Dashboard Pengguna'),
+          backgroundColor: const Color(0xFF1E3A8A),
+          foregroundColor: Colors.white,
+          actions: [
+            IconButton(
+              tooltip: 'Keluar',
+              icon: const Icon(Icons.logout_rounded),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        FigmaWelcomePage(account: widget.account),
+                  ),
+                  (route) => false,
+                );
+              },
+            ),
+          ],
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.solar_power_rounded,
+                  size: 72,
+                  color: Color(0xFF1E3A8A),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Halo, ${widget.account?.name ?? "Pengguna"}!',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Akun Anda terdaftar dengan peran Pengguna (Read-Only).\n'
+                  'Tampilan khusus Pengguna sedang disiapkan pada folder:\n'
+                  'lib/pages/pengguna/',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.black54, height: 1.5),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // 2. JALUR ADMIN (5 Tab Utama di folder lib/pages/admin/)
     final List<Widget> adminPages = [
-      const BerandaPage(),
-      const FigmaAnalisisPage(),
-      const RiwayatPage(),
-      const ModelAIPage(),
-      const AkunPage(),
+      AdminBerandaPage(),
+      AdminAnalisisPage(),
+      AdminModelAiPage(),
+      AdminRiwayatPage(),
+      AdminAkunPage(),
     ];
-
-    // Daftar Halaman Pengguna Biasa (3 Tab)
-    final List<Widget> userPages = [
-      const BerandaPage(),
-      const FigmaAnalisisPage(),
-      const AkunPage(),
-    ];
-
-    final pages = isAdmin ? adminPages : userPages;
 
     return Scaffold(
-      body: pages[_currentIndex],
+      body: adminPages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        selectedItemColor:
-            const Color(0xFF0066FF), // Menggunakan warna utama Figma langsung
-        unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex,
         type: BottomNavigationBarType.fixed,
-        items: isAdmin
-            ? const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.dashboard), label: 'Dashboard'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.bar_chart), label: 'Analitik'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.history), label: 'Riwayat'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.psychology), label: 'Model AI'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: 'Akun'),
-              ]
-            : const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.dashboard), label: 'Dashboard'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.bar_chart), label: 'Analitik'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: 'Akun'),
-              ],
+        selectedItemColor: const Color(0xFF1E3A8A),
+        unselectedItemColor: Colors.grey.shade600,
+        selectedFontSize: 11.5,
+        unselectedFontSize: 11,
+        onTap: (index) => setState(() => _selectedIndex = index),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bar_chart_rounded),
+            label: 'Analitik',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.psychology_rounded),
+            label: 'Model AI',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long_rounded),
+            label: 'Riwayat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded),
+            label: 'Akun',
+          ),
+        ],
       ),
     );
   }
