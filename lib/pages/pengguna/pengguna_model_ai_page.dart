@@ -167,27 +167,6 @@ class PenggunaModelAiPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Divider(height: 20),
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Target SRS',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black54,
-                          ),
-                        ),
-                        Text(
-                          'R² ≥ 0,8 tercapai',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: green,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
