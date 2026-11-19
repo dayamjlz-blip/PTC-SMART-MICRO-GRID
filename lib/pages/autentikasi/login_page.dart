@@ -25,6 +25,25 @@ class _LoginPageState extends State<LoginPage> {
   String message = '';
   bool isPasswordVisible = false;
 
+  void _masukDenganRole(String role, {String? nama}) {
+    final activeAccount = widget.account ??
+        User(
+          name: nama ?? (role == 'Admin' ? 'Admin Micro-Grid' : 'Pengguna'),
+          email: role == 'Admin'
+              ? 'admin@microgrid.ith.ac.id'
+              : 'user@microgrid.ith.ac.id',
+          password: '123',
+          role: role,
+        );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MainNavigation(account: activeAccount),
+      ),
+    );
+  }
+
   void submitLogin() {
     if (!formKey.currentState!.validate()) return;
 
@@ -34,11 +53,14 @@ class _LoginPageState extends State<LoginPage> {
 
     bool success = false;
     String loggedInName = inputUsername;
+    String detectedRole =
+        inputUsername.toLowerCase().contains('admin') ? 'Admin' : 'Pengguna';
 
     if (account != null) {
       success =
           (inputUsername == account.name && inputPassword == account.password);
       loggedInName = account.name;
+      detectedRole = account.role;
     } else {
       success = inputUsername.isNotEmpty && inputPassword.isNotEmpty;
     }
@@ -50,9 +72,19 @@ class _LoginPageState extends State<LoginPage> {
         message = 'Login berhasil. Selamat datang, $loggedInName!';
       });
 
+      final loggedUser = account ??
+          User(
+            name: loggedInName,
+            email: '$loggedInName@microgrid.ith.ac.id',
+            password: inputPassword,
+            role: detectedRole,
+          );
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MainNavigation()),
+        MaterialPageRoute(
+          builder: (context) => MainNavigation(account: loggedUser),
+        ),
       );
     } else {
       setState(() {
@@ -193,9 +225,10 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           controller: usernameController,
                           decoration: InputDecoration(
-                            hintText: "Masukkan username Anda",
+                            hintText:
+                                "Masukkan username (ketik 'admin' untuk Admin)",
                             hintStyle: const TextStyle(
-                                fontSize: 13, color: Colors.grey),
+                                fontSize: 12.5, color: Colors.grey),
                             prefixIcon:
                                 const Icon(Icons.person_outline, size: 20),
                             filled: true,
@@ -310,6 +343,89 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                           ),
+                        ),
+                        const SizedBox(height: 16),
+
+                        // PEMBATAS AKSES CEPAT DEVELOPMENT
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Divider(color: Colors.grey.shade300)),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                "Akses Cepat (Dev)",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Color(0xFF64748B),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                                child: Divider(color: Colors.grey.shade300)),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+
+                        // TOMBOL PILIH ROLE LANGSUNG (ADMIN / PENGGUNA)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: () => _masukDenganRole('Admin'),
+                                icon: const Icon(
+                                  Icons.admin_panel_settings_rounded,
+                                  size: 16,
+                                  color: Color(0xFF1E3A8A),
+                                ),
+                                label: const Text(
+                                  "Admin",
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF1E3A8A),
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  side: const BorderSide(
+                                      color: Color(0xFF1E3A8A)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: OutlinedButton.icon(
+                                onPressed: () => _masukDenganRole('Pengguna'),
+                                icon: const Icon(
+                                  Icons.person_rounded,
+                                  size: 16,
+                                  color: Color(0xFF0066FF),
+                                ),
+                                label: const Text(
+                                  "Pengguna",
+                                  style: TextStyle(
+                                    fontSize: 12.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF0066FF),
+                                  ),
+                                ),
+                                style: OutlinedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 10),
+                                  side: const BorderSide(
+                                      color: Color(0xFF0066FF)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 20),
 

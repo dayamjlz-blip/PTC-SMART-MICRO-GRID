@@ -1,14 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:smart_mikro_grid/models/user.dart';
 
+// Halaman Admin
 import 'package:smart_mikro_grid/pages/admin/admin_akun_page.dart';
 import 'package:smart_mikro_grid/pages/admin/admin_analisis_page.dart';
 import 'package:smart_mikro_grid/pages/admin/admin_beranda_page.dart';
 import 'package:smart_mikro_grid/pages/admin/admin_model_ai_page.dart';
 import 'package:smart_mikro_grid/pages/admin/admin_riwayat_page.dart';
 
-import 'package:smart_mikro_grid/pages/pengguna/pengguna_main_page.dart';
+// Halaman Pengguna
+import 'package:smart_mikro_grid/pages/pengguna/pengguna_akun_page.dart';
+import 'package:smart_mikro_grid/pages/pengguna/pengguna_beranda_page.dart';
+import 'package:smart_mikro_grid/pages/pengguna/pengguna_model_ai_page.dart';
+import 'package:smart_mikro_grid/pages/pengguna/pengguna_riwayat_page.dart';
 
 class MainNavigation extends StatefulWidget {
   final User? account;
@@ -19,8 +23,7 @@ class MainNavigation extends StatefulWidget {
   });
 
   @override
-  State<MainNavigation> createState() =>
-      _MainNavigationState();
+  State<MainNavigation> createState() => _MainNavigationState();
 }
 
 class _MainNavigationState extends State<MainNavigation> {
@@ -29,67 +32,86 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     final String role =
-        (widget.account?.role ?? 'Pengguna')
-            .trim()
-            .toLowerCase();
+        (widget.account?.role ?? 'Pengguna').trim().toLowerCase();
+    final bool isAdmin = role == 'admin';
 
-    final bool isPengguna = role == 'pengguna';
+    // Daftar halaman sesuai role
+    final List<Widget> pages = isAdmin
+        ? [
+            const AdminBerandaPage(),
+            const AdminAnalisisPage(),
+            const AdminModelAiPage(),
+            const AdminRiwayatPage(),
+            const AdminAkunPage(),
+          ]
+        : [
+            const PenggunaBerandaPage(),
+            const PenggunaModelAiPage(),
+            const PenggunaRiwayatPage(),
+            const PenggunaAkunPage(),
+          ];
 
-    // JALUR PENGGUNA
-    if (isPengguna) {
-      return PenggunaMainPage(
-        account: widget.account,
-      );
-    }
+    // Daftar menu BottomNavigationBar sesuai role
+    final List<BottomNavigationBarItem> navItems = isAdmin
+        ? const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: 'Beranda',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart_rounded),
+              label: 'Analitik',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.psychology_rounded),
+              label: 'Model AI',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long_rounded),
+              label: 'Riwayat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_rounded),
+              label: 'Akun',
+            ),
+          ]
+        : const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_rounded),
+              label: 'Beranda',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.psychology_rounded),
+              label: 'Model AI',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long_rounded),
+              label: 'Riwayat',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_rounded),
+              label: 'Akun',
+            ),
+          ];
 
-    // JALUR ADMIN
-    final List<Widget> adminPages = [
-      AdminBerandaPage(),
-      AdminAnalisisPage(),
-      AdminModelAiPage(),
-      AdminRiwayatPage(),
-      AdminAkunPage(),
-    ];
+    // Jaga agar index tidak out-of-range saat berpindah role
+    final int safeIndex = _selectedIndex >= pages.length ? 0 : _selectedIndex;
 
     return Scaffold(
-      body: adminPages[_selectedIndex],
-
+      body: pages[safeIndex],
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
+        currentIndex: safeIndex,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: const Color(0xFF1E3A8A),
         unselectedItemColor: Colors.grey,
         selectedFontSize: 11.5,
         unselectedFontSize: 11,
-
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
-
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_rounded),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart_rounded),
-            label: 'Analitik',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.psychology_rounded),
-            label: 'Model AI',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long_rounded),
-            label: 'Riwayat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_rounded),
-            label: 'Akun',
-          ),
-        ],
+        items: navItems,
       ),
     );
   }
