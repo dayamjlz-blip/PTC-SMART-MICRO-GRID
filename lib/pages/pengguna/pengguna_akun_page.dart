@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class PenggunaAkunPage extends StatefulWidget {
   final String nama;
@@ -20,6 +20,9 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
   late String _nama;
 
   static const Color navy = Color(0xFF20345F);
+
+  // GANTI dengan email customer service Anda yang asli (tanpa spasi, ada @).
+  static const String _emailCs = 'cs.smartmicrogrid@gmail.com';
 
   @override
   void initState() {
@@ -72,9 +75,7 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
                       radius: 28,
                       backgroundColor: navy,
                       child: Text(
-                        _nama.isNotEmpty
-                            ? _nama[0].toUpperCase()
-                            : 'U',
+                        _nama.isNotEmpty ? _nama[0].toUpperCase() : 'U',
                         style: const TextStyle(
                           fontSize: 22,
                           color: Colors.white,
@@ -133,9 +134,9 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
 
               // RINGKASAN AKSES
               _card(
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'Ringkasan akses',
                       style: TextStyle(
@@ -173,6 +174,14 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
                 icon: Icons.lock,
                 title: 'Ganti kata sandi',
                 onTap: _gantiPassword,
+              ),
+
+              const SizedBox(height: 9),
+
+              _menuItem(
+                icon: Icons.support_agent,
+                title: 'Bantuan',
+                onTap: _bantuan,
               ),
 
               const SizedBox(height: 9),
@@ -233,10 +242,7 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
         borderRadius: BorderRadius.circular(15),
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 13,
-            vertical: 14,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 14),
           child: Row(
             children: [
               CircleAvatar(
@@ -263,6 +269,13 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
     );
   }
 
+  void _snack(String pesan) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(pesan)),
+    );
+  }
+
+  // ---------------------------------------------------------------- EDIT NAMA
   void _editNama() {
     _namaController.text = _nama;
 
@@ -273,6 +286,7 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
           title: const Text('Edit nama profil'),
           content: TextField(
             controller: _namaController,
+            autofocus: true,
             decoration: const InputDecoration(
               labelText: 'Nama pengguna',
               border: OutlineInputBorder(),
@@ -286,14 +300,11 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
             ElevatedButton(
               onPressed: () {
                 final namaBaru = _namaController.text.trim();
-
                 if (namaBaru.isEmpty) return;
 
-                setState(() {
-                  _nama = namaBaru;
-                });
-
+                setState(() => _nama = namaBaru);
                 Navigator.pop(dialogContext);
+                _snack('Nama profil diperbarui');
               },
               child: const Text('Simpan'),
             ),
@@ -303,68 +314,70 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
     );
   }
 
+  // ------------------------------------------------------------ GANTI PASSWORD
   void _gantiPassword() {
     final passwordController = TextEditingController();
     final konfirmasiController = TextEditingController();
+    String? pesanError;
 
     showDialog(
       context: context,
       builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('Ganti kata sandi'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Kata sandi baru',
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: konfirmasiController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Konfirmasi kata sandi',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Batal'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (passwordController.text.isEmpty ||
-                    passwordController.text !=
-                        konfirmasiController.text) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(
-                        'Kata sandi kosong atau tidak cocok.',
-                      ),
-                    ),
-                  );
-                  return;
-                }
-
-                Navigator.pop(dialogContext);
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Fitur perubahan kata sandi belum terhubung.',
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Ganti kata sandi'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Kata sandi baru (min. 8 karakter)',
                     ),
                   ),
-                );
-              },
-              child: const Text('Simpan'),
-            ),
-          ],
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: konfirmasiController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: 'Konfirmasi kata sandi',
+                      errorText: pesanError,
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Batal'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (passwordController.text.length < 8) {
+                      setDialogState(
+                        () => pesanError = 'Kata sandi minimal 8 karakter',
+                      );
+                      return;
+                    }
+                    if (passwordController.text !=
+                        konfirmasiController.text) {
+                      setDialogState(
+                        () => pesanError = 'Konfirmasi kata sandi tidak cocok',
+                      );
+                      return;
+                    }
+
+                    // TODO: panggil API/Firebase untuk mengubah kata sandi
+                    Navigator.pop(dialogContext);
+                    _snack('Fitur perubahan kata sandi belum terhubung.');
+                  },
+                  child: const Text('Simpan'),
+                ),
+              ],
+            );
+          },
         );
       },
     ).then((_) {
@@ -373,15 +386,116 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
     });
   }
 
+  // ------------------------------------------------------------------ BANTUAN
+  void _bantuan() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (sheetContext) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 26),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFC5CDE0),
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              const Row(
+                children: [
+                  Icon(Icons.support_agent, color: navy),
+                  SizedBox(width: 10),
+                  Text(
+                    'Bantuan · Customer Service',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: navy,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Jika Anda memiliki kendala, silakan konfirmasi ke email kami.',
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.5,
+                  color: Colors.black54,
+                ),
+              ),
+              const SizedBox(height: 14),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F7FB),
+                  borderRadius: BorderRadius.circular(13),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.email_outlined, size: 18, color: navy),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: SelectableText(
+                        _emailCs,
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: navy,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: 'Salin email',
+                      icon: const Icon(Icons.copy, size: 18),
+                      onPressed: () async {
+                        await Clipboard.setData(
+                          const ClipboardData(text: _emailCs),
+                        );
+                        if (sheetContext.mounted) Navigator.pop(sheetContext);
+                        if (!mounted) return;
+                        _snack('Email disalin');
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Sertakan nama akun dan penjelasan singkat kendala Anda '
+                'agar lebih cepat ditangani.',
+                style: TextStyle(
+                  fontSize: 11.5,
+                  height: 1.5,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // -------------------------------------------------------------------- KELUAR
   void _konfirmasiKeluar() {
     showDialog(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Keluar akun'),
-          content: const Text(
-            'Apakah kamu yakin ingin keluar dari akun?',
-          ),
+          content: const Text('Apakah kamu yakin ingin keluar dari akun?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
@@ -391,13 +505,11 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
               onPressed: () {
                 Navigator.pop(dialogContext);
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      'Fitur keluar akan dihubungkan ke autentikasi.',
-                    ),
-                  ),
-                );
+                // Jika route '/login' sudah terdaftar di main.dart,
+                // aktifkan baris di bawah ini dan hapus _snack(...)
+                // Navigator.of(context)
+                //     .pushNamedAndRemoveUntil('/login', (route) => false);
+                _snack('Fitur keluar akan dihubungkan ke autentikasi.');
               },
               child: const Text('Keluar'),
             ),
