@@ -132,33 +132,6 @@ class _PenggunaAkunPageState extends State<PenggunaAkunPage> {
 
               const SizedBox(height: 12),
 
-              // RINGKASAN AKSES
-              _card(
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Ringkasan akses',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: navy,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Peran User dapat memantau Beranda, Model AI, '
-                      'dan Riwayat. Kontrol beban dan pengaturan '
-                      'sistem hanya untuk Admin.',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.black54,
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
               const SizedBox(height: 12),
 
