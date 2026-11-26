@@ -16,7 +16,7 @@ class PenggunaModelAiPage extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Color(0xFFE7EDF9),
-            Color(0xFF9DB2DA),
+            Color(0xFF9DB2DA), 
             Color(0xFF6684BC),
           ],
         ),
@@ -28,7 +28,7 @@ class PenggunaModelAiPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Model AI',
+                'Prediksi Daya',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,

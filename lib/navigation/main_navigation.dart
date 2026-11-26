@@ -64,7 +64,7 @@ class _MainNavigationState extends State<MainNavigation> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.psychology_rounded),
-              label: 'Model AI',
+              label: 'Prediksi Daya',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.receipt_long_rounded),
@@ -82,7 +82,7 @@ class _MainNavigationState extends State<MainNavigation> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.psychology_rounded),
-              label: 'Model AI',
+              label: 'Predikasi Daya',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.receipt_long_rounded),
