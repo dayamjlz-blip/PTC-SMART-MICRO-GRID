@@ -16,9 +16,6 @@ class _AdminAkunPageState extends State<AdminAkunPage> {
   final Color primary = const Color(0xFF31487A);
   final Color lightBlue = const Color(0xFFD9E1F1);
 
-  bool isAuto = true;
-  double batteryLimit = 30;
-
   bool notifBattery = true;
   bool notifLoad = true;
   bool notifEsp = true;
@@ -166,6 +163,92 @@ class _AdminAkunPageState extends State<AdminAkunPage> {
     );
   }
 
+  // BARIS STATUS INFRASTRUKTUR PADA KARTU SISTEM
+  Widget statusSystemRow({
+    required String title,
+    required String subtitle,
+    required String statusText,
+    required Color statusColor,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          Icon(
+            Icons.circle,
+            color: statusColor,
+            size: 10,
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12.5,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: Colors.black54,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: statusColor.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              statusText,
+              style: TextStyle(
+                color: statusColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 10,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // BARIS PARAMETER PROTEKSI PADA KARTU SISTEM
+  Widget protectionParamRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3.5),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontSize: 12,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              color: primary,
+              fontWeight: FontWeight.bold,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // INFORMASI AKUN
   void showAccountInfo() {
     openPanel(
@@ -230,14 +313,14 @@ class _AdminAkunPageState extends State<AdminAkunPage> {
         final titles = [
           'Hubungkan ESP32',
           'Cek sensor',
-          'Atur mode dan batas kritis',
+          'Pilih mode operasi EMS',
           'Tentukan prioritas beban',
         ];
 
         final descriptions = [
           'Wi-Fi dan alamat server, lalu uji koneksi',
-          'INA219 ×2, LDR, DHT22 terbaca',
-          'AUTO/MANUAL dan batas SoC (0–100%)',
+          'INA219 ×2, LDR, DHT22 terbaca normal',
+          'Mode AUTO (prediksi AI) atau MANUAL melalui halaman Beranda',
           'Relay 1 Kipas DC (Sekunder), Relay 2 Lampu LED (Prioritas)',
         ];
 
@@ -334,7 +417,7 @@ class _AdminAkunPageState extends State<AdminAkunPage> {
               const SizedBox(height: 12),
               const Text(
                 'ESP32 mengirim data tiap 5 detik. '
-                'Sistem menggunakan prediksi daya 30 menit ke depan '
+                'Sistem menggunakan prediksi daya ke depan '
                 'untuk membantu pengelolaan beban baterai.',
                 style: TextStyle(
                   color: Colors.grey,
@@ -468,7 +551,7 @@ class _AdminAkunPageState extends State<AdminAkunPage> {
               ),
               helpRow(
                 'Prediksi daya (Ppred) turun?',
-                'Potensi daya surya 30 menit ke depan diprediksi menurun.',
+                'Potensi daya surya ke depan diprediksi menurun.',
               ),
               const SizedBox(height: 22),
               SizedBox(
@@ -726,7 +809,7 @@ class _AdminAkunPageState extends State<AdminAkunPage> {
 
               const SizedBox(height: 18),
 
-              // KARTU SISTEM
+              // KARTU STATUS INFRASTRUKTUR & PARAMETER PROTEKSI EMS
               Card(
                 color: Colors.white,
                 elevation: 4,
@@ -734,7 +817,7 @@ class _AdminAkunPageState extends State<AdminAkunPage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -743,150 +826,47 @@ class _AdminAkunPageState extends State<AdminAkunPage> {
                         style: TextStyle(
                           color: primary,
                           fontWeight: FontWeight.bold,
+                          fontSize: 13.5,
                         ),
                       ),
-
                       const SizedBox(height: 10),
-
-                      const Row(
-                        children: [
-                          Icon(
-                            Icons.circle,
-                            color: Colors.green,
-                            size: 12,
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'ESP32 Online - 192.168.1.42',
-                              style: TextStyle(fontSize: 11),
-                            ),
-                          ),
-                          Text(
-                            'ONLINE',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
+                      statusSystemRow(
+                        title: 'Node ESP32',
+                        subtitle: '192.168.1.42 • Akuisisi tiap 5 detik',
+                        statusText: 'ONLINE',
+                        statusColor: Colors.green.shade700,
                       ),
-
-                      const SizedBox(height: 18),
-
+                      statusSystemRow(
+                        title: 'Server Flask & Model AI',
+                        subtitle: 'Random Forest Regressor (Port 5000)',
+                        statusText: 'AKTIF',
+                        statusColor: Colors.green.shade700,
+                      ),
+                      statusSystemRow(
+                        title: 'Firebase Realtime Database',
+                        subtitle: 'Sinkronisasi telemetri & log riwayat',
+                        statusText: 'SINKRON',
+                        statusColor: primary,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Divider(
+                          thickness: 1,
+                          color: Color(0xFFE2E8F0),
+                        ),
+                      ),
                       Text(
-                        'Mode Sistem',
+                        'Parameter Proteksi Baterai (Firmware & EMS)',
                         style: TextStyle(
                           color: primary,
                           fontWeight: FontWeight.bold,
+                          fontSize: 12.5,
                         ),
                       ),
-
-                      const SizedBox(height: 8),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: isAuto ? primary : lightBlue,
-                                foregroundColor:
-                                    isAuto ? Colors.white : primary,
-                              ),
-                              onPressed: () {
-                                setState(() => isAuto = true);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      'Mode AUTO aktif — EMS mengikuti batas kritis ${batteryLimit.round()}%.',
-                                    ),
-                                    duration: const Duration(seconds: 2),
-                                  ),
-                                );
-                              },
-                              child: const Text('AUTO'),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: !isAuto ? primary : lightBlue,
-                                foregroundColor:
-                                    !isAuto ? Colors.white : primary,
-                              ),
-                              onPressed: () {
-                                setState(() => isAuto = false);
-                              },
-                              child: const Text('MANUAL'),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Batas krisis baterai',
-                                style: TextStyle(
-                                  color: primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(width: 6),
-                              Icon(
-                                isAuto
-                                    ? Icons.lock_outline_rounded
-                                    : Icons.lock_open_rounded,
-                                size: 15,
-                                color: isAuto ? Colors.grey : Colors.green,
-                              ),
-                            ],
-                          ),
-                          Text(
-                            '${batteryLimit.round()}%',
-                            style: const TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Terkunci saat AUTO, dapat digeser saat MANUAL (FR10)
-                      Slider(
-                        value: batteryLimit,
-                        min: 0,
-                        max: 100,
-                        divisions: 100,
-                        activeColor: primary,
-                        onChanged: isAuto
-                            ? null
-                            : (value) {
-                                setState(() {
-                                  batteryLimit = value;
-                                });
-                              },
-                      ),
-
-                      Text(
-                        isAuto
-                            ? 'Terkunci saat mode AUTO. Pindah ke MANUAL untuk mengubah batas.'
-                            : 'Geser batas kritis, lalu tekan AUTO agar sistem mengikuti nilai baru.',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: isAuto
-                              ? Colors.grey.shade600
-                              : Colors.green.shade700,
-                          fontStyle: FontStyle.italic,
-                        ),
-                      ),
+                      const SizedBox(height: 6),
+                      protectionParamRow('Fail-Safe Lokal (ESP32)', '30% SoC'),
+                      protectionParamRow('Hard Protection Cut-Off', '10% SoC'),
+                      protectionParamRow('Histeresis Pemulihan', '5% SoC'),
                     ],
                   ),
                 ),
